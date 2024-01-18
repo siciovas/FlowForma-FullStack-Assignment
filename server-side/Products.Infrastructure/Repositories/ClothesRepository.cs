@@ -14,6 +14,10 @@ namespace Products.Infrastructure.Repositories
 
         public async Task<Clothes> Create(Clothes clothes)
         {
+            var existingMaterials = _db.Materials.Where(x => clothes.Materials.Select(x => x.Name).Contains(x.Name)).ToList();
+
+            clothes.Materials = existingMaterials;
+
             _db.Clothes.Add(clothes);
             await _db.SaveChangesAsync();
 
@@ -37,7 +41,7 @@ namespace Products.Infrastructure.Repositories
 
             return clothes;
         }
-
+        
         public async Task<Clothes> Update(ClothesDto clothes, int id)
         {
             var clothesUpdate = await _db.Clothes
@@ -48,6 +52,7 @@ namespace Products.Infrastructure.Repositories
             clothesUpdate.Description = clothes.Description;
             clothesUpdate.Price = clothes.Price;
             clothesUpdate.Size = clothes.Size;
+            clothesUpdate.Materials = clothes.Materials.Select(x => new Material { Name = x.Name }).ToList();
 
             await _db.SaveChangesAsync();
 

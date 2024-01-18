@@ -57,7 +57,7 @@ namespace Products.Controllers
                 Price = food.Price,
                 Size = food.Size,
                 Calories = food.Calories,
-                Ingredients = food.Ingredients,
+                Ingredients = food.Ingredients.Select(x => new Ingredient { Name = x.Name }).ToList(),
                 IsVegeterian = food.IsVegeterian,
                 IsVegan = food.IsVegan
             };
