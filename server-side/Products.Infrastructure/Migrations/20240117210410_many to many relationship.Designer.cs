@@ -21,21 +21,6 @@ namespace Products.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("FoodIngredient", b =>
-                {
-                    b.Property<int>("FoodsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IngredientsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FoodsId", "IngredientsId");
-
-                    b.HasIndex("IngredientsId");
-
-                    b.ToTable("FoodIngredient");
-                });
-
             modelBuilder.Entity("Products.Domain.Entities.Clothes", b =>
                 {
                     b.Property<int>("Id")
@@ -133,21 +118,6 @@ namespace Products.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ingredients");
-                });
-
-            modelBuilder.Entity("FoodIngredient", b =>
-                {
-                    b.HasOne("Products.Domain.Entities.Food", null)
-                        .WithMany()
-                        .HasForeignKey("FoodsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Products.Domain.Entities.Ingredient", null)
-                        .WithMany()
-                        .HasForeignKey("IngredientsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

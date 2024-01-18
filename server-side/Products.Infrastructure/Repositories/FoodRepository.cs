@@ -14,6 +14,10 @@ namespace Products.Infrastructure.Repositories
 
         public async Task<Food> Create(Food food)
         {
+            var existingIngredients = _db.Ingredients.Where(x => food.Ingredients.Select(x => x.Name).Contains(x.Name)).ToList();
+
+            food.Ingredients = existingIngredients;
+
             _db.Foods.Add(food);
             await _db.SaveChangesAsync();
 
@@ -48,7 +52,7 @@ namespace Products.Infrastructure.Repositories
             foodUpdate.Description = food.Description;
             foodUpdate.Price = food.Price;
             foodUpdate.Size = food.Size;
-            foodUpdate.Ingredients = food.Ingredients;
+            foodUpdate.Ingredients = food.Ingredients.Select( x => new Ingredient { Name = x.Name }).ToList();
             foodUpdate.Calories = food.Calories;
             foodUpdate.IsVegeterian = food.IsVegeterian;
             foodUpdate.IsVegan = food.IsVegan;

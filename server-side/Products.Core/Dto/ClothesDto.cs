@@ -11,5 +11,6 @@ namespace Products.Core.Dto
     public class ClothesDto : ProductDto
     {
         public Size Size { get; set; }
+        public List<MaterialDto> Materials { get; set; }
     }
 }

@@ -56,6 +56,7 @@ namespace Products.Controllers
                 Description = clothes.Description,
                 Price = clothes.Price,
                 Size = clothes.Size,
+                Materials = clothes.Materials.Select(x => new Material { Name = x.Name}).ToList()
             };
 
             var createdClothes = await _clothesRep.Create(newClothes);

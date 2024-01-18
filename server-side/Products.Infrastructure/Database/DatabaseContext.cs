@@ -1,12 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Products.Domain.Entities;
-using Products.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Products.Infrastructure.Database
 {
@@ -18,5 +11,15 @@ namespace Products.Infrastructure.Database
         public DbSet<Device> Devices { get; set; }
         public DbSet<Clothes> Clothes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Material> Materials { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ingredient>().HasIndex(e => new { e.Name }).IsUnique();
+            modelBuilder.Entity<Food>().HasIndex(e => new { e.Name }).IsUnique();
+            modelBuilder.Entity<Device>().HasIndex(e => new { e.Name }).IsUnique();
+            modelBuilder.Entity<Clothes>().HasIndex(e => new { e.Name }).IsUnique();
+            modelBuilder.Entity<Material>().HasIndex(e => new { e.Name }).IsUnique();
+        }
     }
 }

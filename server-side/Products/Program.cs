@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Products.Core.Interfaces;
 using Products.Infrastructure.Database;
 using Products.Infrastructure.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(x =>
+ x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>

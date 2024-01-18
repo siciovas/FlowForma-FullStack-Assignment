@@ -8,9 +8,11 @@ namespace Products.Domain.Entities
 {
     public class FoodIngredient
     {
-        public int FoodId { get; set; }
-        public int IngredientId { get; set; }
-        public required Food Food { get; set; }
-        public required Ingredient Ingredient { get; set; }
+        public int FoodsId { get; set; }
+        public int IngredientsId { get; set; }
+
+        public Food Food { get; set; } = null!;
+
+        public Ingredient Ingredient { get; set; } = null!;
     }
 }
