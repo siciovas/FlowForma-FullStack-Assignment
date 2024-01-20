@@ -1,4 +1,4 @@
-# Interview Task 2024
+# FlowForma Assignment Task (Full-Stack)
 
 Create a product catalogue system using Angular for the client-side and ASP.NET Core for the server-side.
 
