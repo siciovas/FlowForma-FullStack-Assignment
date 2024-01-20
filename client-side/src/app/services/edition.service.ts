@@ -7,6 +7,7 @@ import { AddDeviceComponent } from '../forms/add-forms/add-device/add-device.com
 import { AddFoodComponent } from '../forms/add-forms/add-food/add-food.component';
 import { AddIngredientComponent } from '../forms/add-forms/add-ingredient/add-ingredient.component';
 import { AddMaterialComponent } from '../forms/add-forms/add-material/add-material.component';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,24 +22,22 @@ export class EditionService {
   }
 
   openEditDialog(): void {
-    console.log('aaa')
+    console.log('aaa');
     if (this.editDialogComponent) {
       this.dialog.open(this.editDialogComponent);
     }
   }
 
   determineComponentBasedOnUrl(url: string): void {
-    const currentUrl = this.route.snapshot.url.join('/');
-    console.log(url)
-    if (url == 'clothes') {
+    if (url == environment.CLOTHES) {
       this.setEditDialogComponent(AddClothesComponent);
-    } else if (url == 'devices') {
+    } else if (url == environment.DEVICES) {
       this.setEditDialogComponent(AddDeviceComponent);
-    } else if (url == 'foods') {
+    } else if (url == environment.FOODS) {
       this.setEditDialogComponent(AddFoodComponent);
-    } else if (url == 'ingredients') {
+    } else if (url == environment.INGREDIENTS) {
       this.setEditDialogComponent(AddIngredientComponent);
-    } else if (url == 'materials') {
+    } else if (url == environment.MATERIALS) {
       this.setEditDialogComponent(AddMaterialComponent);
     }
   }

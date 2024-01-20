@@ -14,7 +14,10 @@
           <td>
             <div class="buttons">
               <app-edit-button></app-edit-button>
-              <app-delete-button [url]="url"></app-delete-button>
+              <app-delete-button
+                [url]="url"
+                [id]="element['id']"
+              ></app-delete-button>
             </div>
           </td>
         </ng-container>

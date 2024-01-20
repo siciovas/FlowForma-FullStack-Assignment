@@ -1,5 +1,9 @@
-<app-add-button [label]="buttonLabel" (click)="openAdditionDialog()"></app-add-button>
+<app-add-button
+  [label]="buttonLabel"
+  (click)="openAdditionDialog()"
+></app-add-button>
 <app-table
   [displayedColumns]="displayedColumns"
   [dataSource]="dataSource"
+  [url]="apiName"
 ></app-table>

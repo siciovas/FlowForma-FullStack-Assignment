@@ -4,6 +4,8 @@ import { AddButtonComponent } from '../add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddFoodComponent } from '../../forms/add-forms/add-food/add-food.component';
 import { EditionService } from '../../services/edition.service';
+import { environment } from '../../environments/environment';
+import { HttpService } from '../../services/http.service';
 
 export interface FoodElement {
   position: number;
@@ -14,6 +16,7 @@ export interface FoodElement {
   price: number;
   isvegeterian: boolean;
   isvegan: boolean;
+  ingredients: string;
 }
 
 const ELEMENT_DATA: FoodElement[] = [];
@@ -27,28 +30,40 @@ const ELEMENT_DATA: FoodElement[] = [];
 })
 export class FoodsComponent implements OnInit {
   displayedColumns = [
-    { name: 'position', displayName: 'Pos.' },
+    { name: 'id', displayName: 'Pos.' },
     { name: 'name', displayName: 'Name' },
     { name: 'description', displayName: 'Description' },
+    { name: 'ingredients', displayName: 'Ingredients' },
     { name: 'size', displayName: 'Size' },
     { name: 'calories', displayName: 'Calories' },
     { name: 'price', displayName: 'Price' },
-    { name: 'isvegeterian', displayName: 'Is vegeterian?' },
-    { name: 'isvegan', displayName: 'Is vegan?' },
+    { name: 'isVegeterian', displayName: 'Is vegeterian?' },
+    { name: 'isVegan', displayName: 'Is vegan?' },
     { name: '', displayName: 'Actions' },
   ];
 
   dataSource: FoodElement[] = ELEMENT_DATA;
   buttonLabel = 'Add food';
+  apiName = environment.FOODS;
 
   constructor(
     public dialog: MatDialog,
-    private editionService: EditionService
+    private editionService: EditionService,
+    private httpService: HttpService
   ) {}
+
   openAdditionDialog() {
     this.dialog.open(AddFoodComponent);
   }
+
+  loadFoods() {
+    this.httpService.getAll(environment.FOODS).subscribe((foods) => {
+      this.dataSource = foods;
+    });
+  }
+
   ngOnInit(): void {
-    this.editionService.determineComponentBasedOnUrl('foods');
+    this.editionService.determineComponentBasedOnUrl(environment.FOODS);
+    this.loadFoods();
   }
 }
