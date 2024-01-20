@@ -1,8 +1,14 @@
 <h1 mat-dialog-title>Delete record</h1>
-<div mat-dialog-content>
-  Would you like to delete the record?{{ data.url }}
-</div>
+<div mat-dialog-content>Would you like to delete the record?</div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>No</button>
-  <button mat-raised-button color="warn" mat-dialog-close cdkFocusInitial>Yes</button>
+  <button
+    mat-raised-button
+    color="warn"
+    mat-dialog-close
+    cdkFocusInitial
+    (click)="deleteData()"
+  >
+    Yes
+  </button>
 </div>

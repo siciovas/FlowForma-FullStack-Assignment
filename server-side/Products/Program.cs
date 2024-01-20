@@ -23,6 +23,14 @@ builder.Services.AddScoped<IIngredientRep, IngredientRepository>();
 builder.Services.AddScoped<IFoodRep, FoodRepository>();
 builder.Services.AddScoped<IClothesRep, ClothesRepository>();
 builder.Services.AddScoped<IDeviceRep, DeviceRepository>();
+builder.Services.AddScoped<IMaterialRep, MaterialRepository>();
+
+builder.Services.AddCors(o => o.AddPolicy("Policy", builder =>
+{
+    builder.AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+}));
 
 var app = builder.Build();
 
@@ -32,5 +40,6 @@ app.UseRouting();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();
+app.UseCors("Policy");
 
 app.Run();

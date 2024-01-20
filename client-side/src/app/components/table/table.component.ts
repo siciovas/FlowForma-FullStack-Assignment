@@ -22,7 +22,7 @@ export interface TableColumns {
     CommonModule,
     MatButtonModule,
     EditButtonComponent,
-    DeleteButtonComponent
+    DeleteButtonComponent,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',

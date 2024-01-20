@@ -4,6 +4,8 @@ import { AddButtonComponent } from '../add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClothesComponent } from '../../forms/add-forms/add-clothes/add-clothes.component';
 import { EditionService } from '../../services/edition.service';
+import { environment } from '../../environments/environment';
+import { HttpService } from '../../services/http.service';
 
 export interface ClothesElement {
   position: number;
@@ -14,16 +16,7 @@ export interface ClothesElement {
   materials: string;
 }
 
-const ELEMENT_DATA: ClothesElement[] = [
-  {
-    position: 1,
-    name: 'Hydrogen',
-    description: 'asdasd',
-    size: 'S',
-    price: 48,
-    materials: 'medvilne, ir tt',
-  },
-];
+const ELEMENT_DATA: ClothesElement[] = [];
 
 @Component({
   selector: 'app-clothes',
@@ -42,17 +35,29 @@ export class ClothesComponent implements OnInit {
     { name: 'materials', displayName: 'Materials' },
     { name: '', displayName: 'Actions' },
   ];
+
   dataSource: ClothesElement[] = ELEMENT_DATA;
   buttonLabel = 'Add clothes';
-  url = 'test';
+  apiName = environment.CLOTHES;
+
   constructor(
     public dialog: MatDialog,
-    private editionService: EditionService
+    private editionService: EditionService,
+    private httpService: HttpService
   ) {}
+
   openAdditionDialog() {
     this.dialog.open(AddClothesComponent);
   }
+
+  loadClothes() {
+    this.httpService.getAll(environment.CLOTHES).subscribe((clothes) => {
+      this.dataSource = clothes;
+    });
+  }
+
   ngOnInit(): void {
-    this.editionService.determineComponentBasedOnUrl('clothes');
+    this.editionService.determineComponentBasedOnUrl(environment.CLOTHES);
+    this.loadClothes();
   }
 }
