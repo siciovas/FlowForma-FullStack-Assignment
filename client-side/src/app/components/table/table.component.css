@@ -1,0 +1,12 @@
+.table {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+}

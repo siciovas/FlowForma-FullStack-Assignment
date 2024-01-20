@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Device</h1>
+<div mat-dialog-content class="form">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput required/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <textarea matInput required></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Price</mat-label>
+    <input matInput required/>
+  </mat-form-field>
+  <label>Is electronical?</label>
+  <mat-radio-group>
+    <mat-radio-button value="1">Yes</mat-radio-button>
+    <mat-radio-button value="2">No</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button cdkFocusInitial>Create</button>
+</div>

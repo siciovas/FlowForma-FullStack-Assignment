@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { EditionService } from './services/edition.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [RouterOutlet, RouterLink, MatCardModule],
+  styleUrl: './app.component.css',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  providers: [EditionService],
 })
 export class AppComponent {
-  title = 'client-side';
+  companyName = 'FlowForma';
 }
