@@ -5,7 +5,10 @@
       [matColumnDef]="column.displayName"
     >
       <th mat-header-cell *matHeaderCellDef>{{ column.displayName }}</th>
-      <td mat-cell *matCellDef="let element">
+      <td mat-cell *matCellDef="let element; let i = index">
+        <ng-container *ngIf="column.displayName === 'Pos.'">
+          {{ i + 1 }}
+        </ng-container>
         <ng-container *ngIf="column.displayName !== 'Actions'">
           {{ element[column.name] }}
         </ng-container>
@@ -13,10 +16,11 @@
           <th *matHeaderCellDef>Actions</th>
           <td>
             <div class="buttons">
-              <app-edit-button></app-edit-button>
+              <app-edit-button [id]="element['id']"></app-edit-button>
               <app-delete-button
                 [url]="url"
                 [id]="element['id']"
+                [triggerEvent]="triggerEvent"
               ></app-delete-button>
             </div>
           </td>
@@ -27,5 +31,3 @@
     <tr mat-row *matRowDef="let row; columns: getDisplayedColumns()"></tr>
   </table>
 </div>
-<!-- (click)="editItem(element) -->
-<!-- (click)="deleteItem(element) -->

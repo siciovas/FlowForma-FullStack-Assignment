@@ -1,12 +1,12 @@
-.container{
+.container {
   display: flex;
   justify-content: center;
 }
 
-a{
+a {
   text-align: center;
 }
 
-h3{
+h3 {
   font-weight: bold;
 }

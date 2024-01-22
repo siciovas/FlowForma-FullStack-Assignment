@@ -31,6 +31,7 @@ export class TableComponent {
   @Input() displayedColumns: TableColumns[] = [];
   @Input() dataSource: any[] = [];
   @Input() url: string = '';
+  @Input() triggerEvent: () => void = () => {};
 
   getDisplayedColumns(): string[] {
     return this.displayedColumns.map((column) => column.displayName);

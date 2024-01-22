@@ -1,14 +1,14 @@
 import { AddButtonComponent } from '../add-button/add-button.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddMaterialComponent } from '../../forms/add-forms/add-material/add-material.component';
+import { AddMaterialComponent } from '../../forms/add-material/add-material.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
 
 export interface MaterialElement {
-  position: number;
+  id: number;
   name: string;
 }
 
@@ -23,7 +23,7 @@ const ELEMENT_DATA: MaterialElement[] = [];
 })
 export class MaterialsComponent implements OnInit {
   displayedColumns = [
-    { name: 'id', displayName: 'Pos.' },
+    { name: '', displayName: 'Pos.' },
     { name: 'name', displayName: 'Name' },
     { name: '', displayName: 'Actions' },
   ];
@@ -39,7 +39,11 @@ export class MaterialsComponent implements OnInit {
   ) {}
 
   openAdditionDialog() {
-    this.dialog.open(AddMaterialComponent);
+    this.dialog.open(AddMaterialComponent, {
+      data: {
+        httpService: this.httpService,
+      },
+    });
   }
 
   loadMaterials() {
@@ -52,4 +56,8 @@ export class MaterialsComponent implements OnInit {
     this.editionService.determineComponentBasedOnUrl(environment.MATERIALS);
     this.loadMaterials();
   }
+
+  triggerEvent = () => {
+    this.loadMaterials();
+  };
 }

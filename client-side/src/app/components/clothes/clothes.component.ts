@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
 import { AddButtonComponent } from '../add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddClothesComponent } from '../../forms/add-forms/add-clothes/add-clothes.component';
+import { AddClothesComponent } from '../../forms/add-clothes/add-clothes.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
+import { MaterialElement } from '../materials/materials.component';
 
 export interface ClothesElement {
-  position: number;
+  id: number;
   name: string;
   description: string;
   size: string;
   price: number;
-  materials: string;
+  materials: MaterialElement[];
 }
 
 const ELEMENT_DATA: ClothesElement[] = [];
@@ -27,7 +28,7 @@ const ELEMENT_DATA: ClothesElement[] = [];
 })
 export class ClothesComponent implements OnInit {
   displayedColumns = [
-    { name: 'position', displayName: 'Pos.' },
+    { name: '', displayName: 'Pos.' },
     { name: 'name', displayName: 'Name' },
     { name: 'description', displayName: 'Description' },
     { name: 'size', displayName: 'Size' },
@@ -47,7 +48,19 @@ export class ClothesComponent implements OnInit {
   ) {}
 
   openAdditionDialog() {
-    this.dialog.open(AddClothesComponent);
+    this.httpService
+      .getAll(environment.MATERIALS)
+      .subscribe((materials: MaterialElement[]) => {
+        const dialogRef = this.dialog.open(AddClothesComponent, {
+          data: {
+            materials,
+            httpService: this.httpService,
+          },
+        });
+        dialogRef.componentInstance.triggerEvent.subscribe(() => {
+          this.triggerEvent();
+        });
+      });
   }
 
   loadClothes() {
@@ -60,4 +73,8 @@ export class ClothesComponent implements OnInit {
     this.editionService.determineComponentBasedOnUrl(environment.CLOTHES);
     this.loadClothes();
   }
+
+  triggerEvent = () => {
+    this.loadClothes();
+  };
 }

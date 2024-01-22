@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
 import { AddButtonComponent } from '../add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddIngredientComponent } from '../../forms/add-forms/add-ingredient/add-ingredient.component';
+import { AddIngredientComponent } from '../../forms/add-ingredient/add-ingredient.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
 
 export interface IngredientElement {
-  position: number;
+  id: number;
   name: string;
 }
 
@@ -23,7 +23,7 @@ const ELEMENT_DATA: IngredientElement[] = [];
 })
 export class IngredientsComponent implements OnInit {
   displayedColumns = [
-    { name: 'id', displayName: 'Pos.' },
+    { name: '', displayName: 'Pos.' },
     { name: 'name', displayName: 'Name' },
     { name: '', displayName: 'Actions' },
   ];
@@ -38,7 +38,11 @@ export class IngredientsComponent implements OnInit {
     private httpService: HttpService
   ) {}
   openAdditionDialog() {
-    this.dialog.open(AddIngredientComponent);
+    this.dialog.open(AddIngredientComponent, {
+      data: {
+        httpService: this.httpService,
+      },
+    });
   }
 
   loadIngredients() {
@@ -53,4 +57,8 @@ export class IngredientsComponent implements OnInit {
     this.editionService.determineComponentBasedOnUrl(environment.INGREDIENTS);
     this.loadIngredients();
   }
+
+  triggerEvent = () => {
+    this.loadIngredients();
+  };
 }

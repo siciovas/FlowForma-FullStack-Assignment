@@ -6,13 +6,14 @@ import { EditionService } from '../../services/edition.service';
 @Component({
   selector: 'app-edit-button',
   standalone: true,
-  imports: [MatButtonModule,MatIconModule],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './edit-button.component.html',
-  styleUrl: './edit-button.component.css'
+  styleUrl: './edit-button.component.css',
 })
 export class EditButtonComponent {
+  @Input() id: number | null = null;
   constructor(private editionService: EditionService) {}
   openEditDialog(): void {
-    this.editionService.openEditDialog();
+    this.editionService.openEditDialog(this.id);
   }
 }
