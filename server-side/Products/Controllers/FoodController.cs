@@ -17,7 +17,7 @@ namespace Products.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Food>>> GetAll()
+        public async Task<ActionResult<List<FoodDto>>> GetAll()
         {
             var food = await _foodRep.GetAll();
 
@@ -26,13 +26,24 @@ namespace Products.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<Food>> Get(int id)
+        public async Task<ActionResult<FoodDto>> Get(int id)
         {
             var food = await _foodRep.Get(id);
 
             if (food == null) return NotFound();
 
-            return Ok(food);
+            return Ok(new FoodDto
+            {
+                Id = food.Id,
+                Description = food.Description,
+                Name = food.Name,
+                Calories = food.Calories,
+                Ingredients = food.Ingredients.Select(ingredient => ingredient.Name).ToList(),
+                IsVegan = food.IsVegan,
+                IsVegetarian = food.IsVegetarian,
+                Price = food.Price,
+                Size = food.Size
+            });
         }
 
         [HttpDelete("{id}")]
@@ -57,8 +68,8 @@ namespace Products.Controllers
                 Price = food.Price,
                 Size = food.Size,
                 Calories = food.Calories,
-                Ingredients = food.Ingredients.Select(x => new Ingredient { Name = x.Name }).ToList(),
-                IsVegeterian = food.IsVegeterian,
+                Ingredients = food.Ingredients.Select(ingredient => new Ingredient { Name = ingredient }).ToList(),
+                IsVegetarian = food.IsVegetarian,
                 IsVegan = food.IsVegan
             };
 

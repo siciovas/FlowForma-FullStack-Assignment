@@ -1,0 +1,45 @@
+<form [formGroup]="clothesForm" (ngSubmit)="onSubmit()">
+  <h1 mat-dialog-title>Clothes</h1>
+  <div mat-dialog-content class="form">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" required></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Price</mat-label>
+      <input matInput formControlName="price" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Size</mat-label>
+      <mat-select matNativeControl formControlName="size" required>
+        <mat-option value="S">S</mat-option>
+        <mat-option value="M">M</mat-option>
+        <mat-option value="L">L</mat-option>
+        <mat-option value="XL">XL</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Materials</mat-label>
+      <mat-select
+        [value]="selectedValues"
+        multiple
+        required
+        formControlName="materials"
+      >
+        @for (material of materialsList; track material) {
+        <mat-option [value]="material.name">{{ material.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button mat-dialog-close cdkFocusInitial type="submit">
+      {{ isEdit ? "Update" : "Create" }}
+    </button>
+  </div>
+</form>

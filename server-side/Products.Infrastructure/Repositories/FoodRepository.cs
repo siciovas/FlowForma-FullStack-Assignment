@@ -32,12 +32,22 @@ namespace Products.Infrastructure.Repositories
 
         public async Task<Food?> Get(int id)
         {
-            return await _db.Foods.FirstOrDefaultAsync(x => x.Id == id);
+            return await _db.Foods.Include(x => x.Ingredients).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Food>> GetAll()
+        public async Task<List<FoodDto>> GetAll()
         {
-            var foods = await _db.Foods.ToListAsync();
+            var foods = await _db.Foods.Include(x => x.Ingredients).Select(x => new FoodDto {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Size = x.Size,
+                Price = x.Price,
+                Calories = x.Calories,
+                Ingredients = x.Ingredients.Select(x => x.Name).ToList(),
+                IsVegan = x.IsVegan,
+                IsVegetarian = x.IsVegetarian,
+            }).ToListAsync();
 
             return foods;
         }
@@ -48,13 +58,15 @@ namespace Products.Infrastructure.Repositories
                 .AsTracking()
                 .FirstAsync(x => x.Id == id);
 
+            var existingIngredients = _db.Ingredients.Where(x => food.Ingredients.Select(ingredient => ingredient).Contains(x.Name)).ToList();
+
             foodUpdate.Name = food.Name;
             foodUpdate.Description = food.Description;
             foodUpdate.Price = food.Price;
             foodUpdate.Size = food.Size;
-            foodUpdate.Ingredients = food.Ingredients.Select( x => new Ingredient { Name = x.Name }).ToList();
+            foodUpdate.Ingredients = existingIngredients;
             foodUpdate.Calories = food.Calories;
-            foodUpdate.IsVegeterian = food.IsVegeterian;
+            foodUpdate.IsVegetarian = food.IsVegetarian;
             foodUpdate.IsVegan = food.IsVegan;
 
             await _db.SaveChangesAsync();

@@ -32,12 +32,19 @@ namespace Products.Infrastructure.Repositories
 
         public async Task<Clothes?> Get(int id)
         {
-            return await _db.Clothes.FirstOrDefaultAsync(x => x.Id == id);
+            return await _db.Clothes.Include(x => x.Materials).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Clothes>> GetAll()
+        public async Task<List<ClothesDto>> GetAll()
         {
-            var clothes = await _db.Clothes.ToListAsync();
+            var clothes = await _db.Clothes.Include(x => x.Materials).Select(x => new ClothesDto { 
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description,
+            Price = x.Price,
+            Size = x.Size,
+            Materials = x.Materials.Select(x => x.Name).ToList()
+            }).ToListAsync();
 
             return clothes;
         }
@@ -48,11 +55,13 @@ namespace Products.Infrastructure.Repositories
                 .AsTracking()
                 .FirstAsync(x => x.Id == id);
 
+            var existingMaterials = _db.Materials.Where(x => clothes.Materials.Select(material => material).Contains(x.Name)).ToList();
+
             clothesUpdate.Name = clothes.Name;
             clothesUpdate.Description = clothes.Description;
             clothesUpdate.Price = clothes.Price;
             clothesUpdate.Size = clothes.Size;
-            clothesUpdate.Materials = clothes.Materials.Select(x => new Material { Name = x.Name }).ToList();
+            clothesUpdate.Materials = existingMaterials;
 
             await _db.SaveChangesAsync();
 

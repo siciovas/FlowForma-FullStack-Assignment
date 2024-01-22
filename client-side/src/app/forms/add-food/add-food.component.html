@@ -1,0 +1,54 @@
+<form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+  <h1 mat-dialog-title>Food</h1>
+  <div mat-dialog-content class="form">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" required></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Size</mat-label>
+      <mat-select matNativeControl formControlName="size" required>
+        <mat-option value="0">S</mat-option>
+        <mat-option value="1">M</mat-option>
+        <mat-option value="2">L</mat-option>
+        <mat-option value="3">XL</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Ingredients</mat-label>
+      <mat-select multiple required formControlName="ingredients">
+        @for (ingredient of ingredientsList; track ingredient) {
+        <mat-option [value]="ingredient.name">{{ ingredient.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Calories</mat-label>
+      <input matInput type="number" formControlName="calories" required />
+    </mat-form-field>
+    <label>Is vegeterian?</label>
+    <mat-radio-group formControlName="isVegetarian">
+      <mat-radio-button value="true">Yes</mat-radio-button>
+      <mat-radio-button value="false">No</mat-radio-button>
+    </mat-radio-group>
+    <label>Is vegan?</label>
+    <mat-radio-group formControlName="isVegan">
+      <mat-radio-button value="true">Yes</mat-radio-button>
+      <mat-radio-button value="false">No</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button mat-dialog-close cdkFocusInitial type="submit">
+      {{ isEdit ? "Update" : "Create" }}
+    </button>
+  </div>
+</form>

@@ -5,7 +5,7 @@ namespace Products.Core.Interfaces
 {
     public interface IFoodRep
     {
-        Task<List<Food>> GetAll();
+        Task<List<FoodDto>> GetAll();
         Task<Food?> Get(int id);
         Task<Food> Create(Food food);
         Task<Food> Update(FoodDto food, int id);

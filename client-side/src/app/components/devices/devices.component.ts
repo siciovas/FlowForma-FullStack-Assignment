@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
 import { AddButtonComponent } from '../add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddDeviceComponent } from '../../forms/add-forms/add-device/add-device.component';
+import { AddDeviceComponent } from '../../forms/add-device/add-device.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
 
 export interface DeviceElement {
-  position: number;
+  id: number;
   name: string;
   description: string;
   price: number;
@@ -26,7 +26,7 @@ const ELEMENT_DATA: DeviceElement[] = [];
 })
 export class DevicesComponent implements OnInit {
   displayedColumns = [
-    { name: 'id', displayName: 'Pos.' },
+    { name: '', displayName: 'Pos.' },
     { name: 'name', displayName: 'Name' },
     { name: 'description', displayName: 'Description' },
     { name: 'price', displayName: 'Price' },
@@ -45,7 +45,11 @@ export class DevicesComponent implements OnInit {
   ) {}
 
   openAdditionDialog() {
-    this.dialog.open(AddDeviceComponent);
+    this.dialog.open(AddDeviceComponent, {
+      data: {
+        httpService: this.httpService,
+      },
+    });
   }
 
   loadDevices() {
@@ -58,4 +62,8 @@ export class DevicesComponent implements OnInit {
     this.editionService.determineComponentBasedOnUrl(environment.DEVICES);
     this.loadDevices();
   }
+
+  triggerEvent = () => {
+    this.loadDevices();
+  };
 }

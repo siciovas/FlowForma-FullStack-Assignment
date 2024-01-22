@@ -2,21 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
 import { AddButtonComponent } from '../add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddFoodComponent } from '../../forms/add-forms/add-food/add-food.component';
+import { AddFoodComponent } from '../../forms/add-food/add-food.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
+import { IngredientElement } from '../ingredients/ingredients.component';
 
 export interface FoodElement {
-  position: number;
+  id: number;
   name: string;
   description: string;
   size: number;
   calories: number;
   price: number;
-  isvegeterian: boolean;
+  isvegetarian: boolean;
   isvegan: boolean;
-  ingredients: string;
+  ingredients: IngredientElement[];
 }
 
 const ELEMENT_DATA: FoodElement[] = [];
@@ -30,14 +31,14 @@ const ELEMENT_DATA: FoodElement[] = [];
 })
 export class FoodsComponent implements OnInit {
   displayedColumns = [
-    { name: 'id', displayName: 'Pos.' },
+    { name: '', displayName: 'Pos.' },
     { name: 'name', displayName: 'Name' },
     { name: 'description', displayName: 'Description' },
     { name: 'ingredients', displayName: 'Ingredients' },
     { name: 'size', displayName: 'Size' },
     { name: 'calories', displayName: 'Calories' },
     { name: 'price', displayName: 'Price' },
-    { name: 'isVegeterian', displayName: 'Is vegeterian?' },
+    { name: 'isVegetarian', displayName: 'Is vegetarian?' },
     { name: 'isVegan', displayName: 'Is vegan?' },
     { name: '', displayName: 'Actions' },
   ];
@@ -53,7 +54,16 @@ export class FoodsComponent implements OnInit {
   ) {}
 
   openAdditionDialog() {
-    this.dialog.open(AddFoodComponent);
+    this.httpService
+      .getAll(environment.INGREDIENTS)
+      .subscribe((ingredients: IngredientElement[]) => {
+        this.dialog.open(AddFoodComponent, {
+          data: {
+            ingredients,
+            httpService: this.httpService,
+          },
+        });
+      });
   }
 
   loadFoods() {
@@ -66,4 +76,8 @@ export class FoodsComponent implements OnInit {
     this.editionService.determineComponentBasedOnUrl(environment.FOODS);
     this.loadFoods();
   }
+
+  triggerEvent = () => {
+    this.loadFoods();
+  };
 }

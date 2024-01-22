@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using Products.Core.Interfaces;
 using Products.Infrastructure.Database;
 using Products.Infrastructure.Repositories;
@@ -7,8 +8,12 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddNewtonsoftJson(x =>
- x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllers().AddNewtonsoftJson(x => 
+{
+    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    x.SerializerSettings.Converters.Add(new StringEnumConverter());
+});
+ 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>

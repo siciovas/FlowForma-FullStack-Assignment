@@ -17,7 +17,7 @@ namespace Products.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Clothes>>> GetAll()
+        public async Task<ActionResult<List<ClothesDto>>> GetAll()
         {
             var clothes = await _clothesRep.GetAll();
 
@@ -26,13 +26,21 @@ namespace Products.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<Clothes>> Get(int id)
+        public async Task<ActionResult<ClothesDto>> Get(int id)
         {
             var clothes = await _clothesRep.Get(id);
 
             if (clothes == null) return NotFound();
 
-            return Ok(clothes);
+            return Ok(new ClothesDto
+            {
+                Id = clothes.Id,
+                Description = clothes.Description,
+                Name = clothes.Name,
+                Size = clothes.Size,
+                Price = clothes.Price,
+                Materials = clothes.Materials.Select(material => material.Name).ToList()
+            });
         }
 
         [HttpDelete("{id}")]
@@ -56,7 +64,7 @@ namespace Products.Controllers
                 Description = clothes.Description,
                 Price = clothes.Price,
                 Size = clothes.Size,
-                Materials = clothes.Materials.Select(x => new Material { Name = x.Name}).ToList()
+                Materials = clothes.Materials.Select(material => new Material { Name = material }).ToList()
             };
 
             var createdClothes = await _clothesRep.Create(newClothes);

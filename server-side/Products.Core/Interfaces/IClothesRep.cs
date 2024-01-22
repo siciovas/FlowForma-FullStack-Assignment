@@ -5,7 +5,7 @@ namespace Products.Core.Interfaces
 {
     public interface IClothesRep
     {
-        Task<List<Clothes>> GetAll();
+        Task<List<ClothesDto>> GetAll();
         Task<Clothes?> Get(int id);
         Task<Clothes> Create(Clothes clothes);
         Task<Clothes> Update(ClothesDto clothes, int id);
