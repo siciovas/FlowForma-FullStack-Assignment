@@ -16,7 +16,6 @@ namespace Product.Test
         {
             var dbContextOptions = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .Options;
 
             _databaseContext = new DatabaseContext(dbContextOptions);
@@ -82,6 +81,76 @@ namespace Product.Test
             Assert.Equal(clothes.Description, result.Description);
             Assert.Equal(clothes.Price, result.Price);
             Assert.Equal(clothes.Materials[0].Name, material.Name);
+        }
+
+        [Fact]
+        public async void Create_CreateClothes_ReturnsCorrectData()
+        {
+            var clothesRepository = CreateRepository();
+
+            var material = _fixture
+                .Build<Material>()
+                .Without(x => x.Clothes)
+                .Without(x => x.Id)
+                .Create();
+
+            var clothes = _fixture
+                .Build<Clothes>()
+                .With(x => x.Materials, [material])
+                .Without(x => x.Id)
+                .Create();
+
+            await _databaseContext.AddAsync(material);
+            await _databaseContext.SaveChangesAsync();
+
+            await clothesRepository.Create(clothes);
+
+            var expected = await _databaseContext.Clothes.FirstAsync();
+
+            Assert.Equal(expected.Name, clothes.Name);
+            Assert.Equal(expected.Materials[0].Name, material.Name);
+        }
+
+        [Fact]
+        public async void Update_UpdateClothes_ReturnsCorrectData()
+        {
+            var clothesRepository = CreateRepository();
+
+            var materials = _fixture
+                .Build<Material>()
+                .Without(x => x.Clothes)
+                .Without(x => x.Id)
+                .CreateMany(2).ToList();
+
+            var clothes = _fixture
+                .Build<Clothes>()
+                .With(x => x.Materials, [materials[0]])
+                .Without(x => x.Id)
+                .Create();
+
+            await _databaseContext.AddAsync(clothes);
+            await _databaseContext.AddRangeAsync(materials);
+            await _databaseContext.SaveChangesAsync();
+
+            var newName = _fixture.Create<string>();
+            var newDescription = _fixture.Create<string>();
+
+            var clothesDto = new ClothesDto
+            {
+                Name = newName,
+                Description = newDescription,
+                Materials = new List<string> {
+                    materials[1].Name
+                }
+            };
+
+            await clothesRepository.Update(clothesDto, clothes.Id);
+
+            var expected = await _databaseContext.Clothes.FirstAsync();
+
+            Assert.Equal(expected.Name, newName);
+            Assert.Equal(expected.Description, newDescription);
+            Assert.Equal(expected.Materials[0].Name, materials[1].Name);
         }
 
         [Fact]

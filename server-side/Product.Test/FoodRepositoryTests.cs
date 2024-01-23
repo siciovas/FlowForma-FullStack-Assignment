@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.EntityFrameworkCore;
+using Products.Core.Dto;
 using Products.Domain.Entities;
 using Products.Infrastructure.Database;
 using Products.Infrastructure.Repositories;
@@ -15,7 +16,6 @@ namespace Product.Test
         {
             var dbContextOptions = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .Options;
 
             _databaseContext = new DatabaseContext(dbContextOptions);
@@ -81,6 +81,76 @@ namespace Product.Test
             Assert.Equal(food.Description, result.Description);
             Assert.Equal(food.Price, result.Price);
             Assert.Equal(food.Ingredients[0].Name, ingredient.Name);
+        }
+
+        [Fact]
+        public async void Create_CreateFood_ReturnsCorrectData()
+        {
+            var foodRepository = CreateRepository();
+
+            var ingredient = _fixture
+                .Build<Ingredient>()
+                .Without(x => x.Foods)
+                .Without(x => x.Id)
+                .Create();
+
+            var food = _fixture
+                .Build<Food>()
+                .With(x => x.Ingredients, [ingredient])
+                .Without(x => x.Id)
+                .Create();
+
+            await _databaseContext.AddAsync(ingredient);
+            await _databaseContext.SaveChangesAsync();
+
+            await foodRepository.Create(food);
+
+            var expected = await _databaseContext.Foods.FirstAsync();
+
+            Assert.Equal(expected.Name, food.Name);
+            Assert.Equal(expected.Ingredients[0].Name, ingredient.Name);
+        }
+
+        [Fact]
+        public async void Update_UpdateFood_ReturnsCorrectData()
+        {
+            var foodRepository = CreateRepository();
+
+            var ingredients = _fixture
+                .Build<Ingredient>()
+                .Without(x => x.Foods)
+                .Without(x => x.Id)
+                .CreateMany(2).ToList();
+
+            var food = _fixture
+                .Build<Food>()
+                .With(x => x.Ingredients, [ingredients[0]])
+                .Without(x => x.Id)
+                .Create();
+
+            await _databaseContext.AddAsync(food);
+            await _databaseContext.AddRangeAsync(ingredients);
+            await _databaseContext.SaveChangesAsync();
+
+            var newName = _fixture.Create<string>();
+            var newDescription = _fixture.Create<string>();
+
+            var foodDto = new FoodDto
+            {
+                Name = newName,
+                Description = newDescription,
+                Ingredients = new List<string> {
+                    ingredients[1].Name
+                }
+            };
+
+            await foodRepository.Update(foodDto, food.Id);
+
+            var expected = await _databaseContext.Foods.FirstAsync();
+
+            Assert.Equal(expected.Name, newName);
+            Assert.Equal(expected.Description, newDescription);
+            Assert.Equal(expected.Ingredients[0].Name, ingredients[1].Name);
         }
 
         [Fact]
