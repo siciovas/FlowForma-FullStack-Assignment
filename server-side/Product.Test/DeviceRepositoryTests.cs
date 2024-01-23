@@ -63,7 +63,7 @@ namespace Product.Test
 
             var result = await deviceRepository.Get(device.Id);
 
-            Assert.Equal(device.Name, result.Name);
+            Assert.Equal(device.Name, result!.Name);
             Assert.Equal(device.Description, result.Description);
             Assert.Equal(device.Price, result.Price);
             Assert.Equal(device.IsElectronical, result.IsElectronical);
