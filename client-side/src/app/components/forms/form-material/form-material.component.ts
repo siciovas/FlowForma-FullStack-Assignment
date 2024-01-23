@@ -2,38 +2,33 @@ import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MaterialElement } from '../../components/materials/materials.component';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-add-clothes',
+  selector: 'app-form-material',
   standalone: true,
   imports: [
     MatFormFieldModule,
     MatDialogModule,
     CommonModule,
-    MatSelectModule,
     MatButtonModule,
-    FormsModule,
     MatInputModule,
+    FormsModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './add-clothes.component.html',
-  styleUrl: './add-clothes.component.css',
+  templateUrl: './form-material.component.html',
+  styleUrl: './form-material.component.css',
 })
-export class AddClothesComponent {
+export class FormMaterialComponent {
   @Output() triggerEvent = new EventEmitter<void>();
-  clothesForm: FormGroup;
-  materialsList: MaterialElement[] = [];
+  materialForm: FormGroup;
   isEdit: boolean = false;
-  selectedValues: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -42,24 +37,9 @@ export class AddClothesComponent {
   ) {
     var body = data.body;
     this.isEdit = body !== undefined;
-    this.clothesForm = this.fb.group({
+    this.materialForm = this.fb.group({
       name: [(body && body.name) ?? '', Validators.required],
-      description: [(body && body.description) ?? '', Validators.required],
-      price: [
-        (body && body.price) ?? 0,
-        [Validators.required, Validators.min(1)],
-      ],
-      size: [(body && body.size) ?? '', Validators.required],
-      materials: [(body && body.materials) ?? [], Validators.required],
     });
-  }
-
-  ngOnInit(): void {
-    this.materialsList = this.data.materials;
-    if (this.data.additionalData) {
-      this.materialsList = this.data.additionalData;
-      this.selectedValues = this.data.additionalData;
-    }
   }
 
   private showSnackBar(message: string): void {
@@ -71,29 +51,29 @@ export class AddClothesComponent {
   }
 
   onSubmit() {
-    if (this.clothesForm.valid) {
-      const formData = this.clothesForm.value;
+    if (this.materialForm.valid) {
+      const formData = this.materialForm.value;
 
       if (!this.isEdit) {
-        this.data.httpService.add(environment.CLOTHES, formData).subscribe(
+        this.data.httpService.add(environment.MATERIALS, formData).subscribe(
           () => {
-            this.showSnackBar('Added clothes');
+            this.showSnackBar('Added material');
             this.triggerEvent.emit();
           },
           () => {
-            this.showSnackBar('Failed to add clothes');
+            this.showSnackBar('Failed to add material');
           }
         );
       } else {
         this.data.httpService
-          .update(environment.CLOTHES, formData, this.data.body.id)
+          .update(environment.MATERIALS, formData, this.data.body.id)
           .subscribe(
             () => {
-              this.showSnackBar('Updated clothes');
+              this.showSnackBar('Updated material');
               this.triggerEvent.emit();
             },
             () => {
-              this.showSnackBar('Failed to update clothes');
+              this.showSnackBar('Failed to update material');
             }
           );
       }

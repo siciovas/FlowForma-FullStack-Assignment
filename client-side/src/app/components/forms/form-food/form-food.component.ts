@@ -1,18 +1,19 @@
-import { environment } from '../../environments/environment';
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IngredientElement } from '../../ingredients/ingredients.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-add-device',
+  selector: 'app-form-food',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -24,13 +25,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatButtonModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './add-device.component.html',
-  styleUrl: './add-device.component.css',
+  templateUrl: './form-food.component.html',
+  styleUrl: './form-food.component.css',
 })
-export class AddDeviceComponent {
+export class FormFoodComponent {
   @Output() triggerEvent = new EventEmitter<void>();
-  deviceForm: FormGroup;
+  foodForm: FormGroup;
+  ingredientsList: IngredientElement[] = [];
   isEdit: boolean = false;
+  selectedValues: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -39,18 +42,33 @@ export class AddDeviceComponent {
   ) {
     var body = data.body;
     this.isEdit = body !== undefined;
-    this.deviceForm = this.fb.group({
+    this.foodForm = this.fb.group({
       name: [(body && body.name) ?? '', Validators.required],
       description: [(body && body.description) ?? '', Validators.required],
       price: [
         (body && body.price) ?? 0,
         [Validators.required, Validators.min(1)],
       ],
-      isElectronical: [
-        (body && body.isElectronical.toString()) ?? '',
+      size: [(body && body.size) ?? '', Validators.required],
+      ingredients: [(body && body.ingredients) ?? [], Validators.required],
+      calories: [
+        (body && body.calories) ?? 0,
+        [Validators.required, Validators.min(1)],
+      ],
+      isVegetarian: [
+        (body && body.isVegetarian.toString()) ?? '',
         Validators.required,
       ],
+      isVegan: [(body && body.isVegan.toString()) ?? '', Validators.required],
     });
+  }
+
+  ngOnInit(): void {
+    this.ingredientsList = this.data.ingredients;
+    if (this.data.additionalData) {
+      this.ingredientsList = this.data.additionalData;
+      this.selectedValues = this.data.additionalData;
+    }
   }
 
   private showSnackBar(message: string): void {
@@ -62,29 +80,29 @@ export class AddDeviceComponent {
   }
 
   onSubmit() {
-    if (this.deviceForm.valid) {
-      const formData = this.deviceForm.value;
+    if (this.foodForm.valid) {
+      const formData = this.foodForm.value;
 
       if (!this.isEdit) {
-        this.data.httpService.add(environment.DEVICES, formData).subscribe(
+        this.data.httpService.add(environment.FOODS, formData).subscribe(
           () => {
-            this.showSnackBar('Added device');
+            this.showSnackBar('Added food');
             this.triggerEvent.emit();
           },
           () => {
-            this.showSnackBar('Failed to add device');
+            this.showSnackBar('Failed to add food');
           }
         );
       } else {
         this.data.httpService
-          .update(environment.DEVICES, formData, this.data.body.id)
+          .update(environment.FOODS, formData, this.data.body.id)
           .subscribe(
             () => {
-              this.showSnackBar('Updated device');
+              this.showSnackBar('Updated food');
               this.triggerEvent.emit();
             },
             () => {
-              this.showSnackBar('Failed to update device');
+              this.showSnackBar('Failed to update food');
             }
           );
       }

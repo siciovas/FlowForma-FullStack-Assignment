@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
-import { AddButtonComponent } from '../add-button/add-button.component';
+import { AddButtonComponent } from '../buttons/add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddIngredientComponent } from '../../forms/add-ingredient/add-ingredient.component';
+import { FormIngredientComponent } from '../forms/form-ingredient/form-ingredient.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 export interface IngredientElement {
   id: number;
@@ -17,7 +19,12 @@ const ELEMENT_DATA: IngredientElement[] = [];
 @Component({
   selector: 'app-ingredients',
   standalone: true,
-  imports: [TableComponent, AddButtonComponent],
+  imports: [
+    TableComponent,
+    AddButtonComponent,
+    MatProgressSpinnerModule,
+    CommonModule,
+  ],
   templateUrl: './ingredients.component.html',
   styleUrl: './ingredients.component.css',
 })
@@ -28,6 +35,7 @@ export class IngredientsComponent implements OnInit {
     { name: '', displayName: 'Actions' },
   ];
 
+  isLoading: boolean = true;
   dataSource: IngredientElement[] = ELEMENT_DATA;
   apiName = environment.INGREDIENTS;
   buttonLabel = 'Add ingredient';
@@ -38,10 +46,13 @@ export class IngredientsComponent implements OnInit {
     private httpService: HttpService
   ) {}
   openAdditionDialog() {
-    this.dialog.open(AddIngredientComponent, {
+    const dialogRef = this.dialog.open(FormIngredientComponent, {
       data: {
         httpService: this.httpService,
       },
+    });
+    dialogRef.componentInstance.triggerEvent.subscribe(() => {
+      this.triggerEvent();
     });
   }
 
@@ -50,6 +61,7 @@ export class IngredientsComponent implements OnInit {
       .getAll(environment.INGREDIENTS)
       .subscribe((ingredients) => {
         this.dataSource = ingredients;
+        this.isLoading = false;
       });
   }
 
@@ -59,6 +71,7 @@ export class IngredientsComponent implements OnInit {
   }
 
   triggerEvent = () => {
+    this.isLoading = true;
     this.loadIngredients();
   };
 }

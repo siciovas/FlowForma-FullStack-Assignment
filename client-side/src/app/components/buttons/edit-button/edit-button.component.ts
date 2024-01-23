@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { EditionService } from '../../services/edition.service';
+import { EditionService } from '../../../services/edition.service';
 
 @Component({
   selector: 'app-edit-button',
@@ -12,8 +12,9 @@ import { EditionService } from '../../services/edition.service';
 })
 export class EditButtonComponent {
   @Input() id: number | null = null;
+  @Input() triggerEvent: () => void = () => {};
   constructor(private editionService: EditionService) {}
   openEditDialog(): void {
-    this.editionService.openEditDialog(this.id);
+    this.editionService.openEditDialog(this.id, this.triggerEvent);
   }
 }

@@ -1,17 +1,27 @@
 <div class="container">
-  <div class="left">
-    <mat-nav-list>
-      <h3 mat-subheader>Products:</h3>
-      <a mat-list-item routerLink="/foods">Foods</a>
-      <a mat-list-item routerLink="/clothes">Clothes</a>
-      <a mat-list-item routerLink="/devices">Devices</a>
-    </mat-nav-list>
+  <div class="items">
+    <div class="left">
+      <mat-nav-list>
+        <h3 mat-subheader>Products:</h3>
+        <a mat-list-item routerLink="/foods">Foods</a>
+        <a mat-list-item routerLink="/clothes">Clothes</a>
+        <a mat-list-item routerLink="/devices">Devices</a>
+      </mat-nav-list>
+    </div>
+    <div class="right">
+      <mat-nav-list>
+        <h3 mat-subheader>Compositions:</h3>
+        <a mat-list-item routerLink="/materials">Materials</a>
+        <a mat-list-item routerLink="/ingredients">Ingredients</a>
+      </mat-nav-list>
+    </div>
   </div>
-  <div class="right">
-    <mat-nav-list>
-      <h3 mat-subheader>Compositions:</h3>
-      <a mat-list-item routerLink="/materials">Materials</a>
-      <a mat-list-item routerLink="/ingredients">Ingredients</a>
-    </mat-nav-list>
+  <div class="explanation">
+    This CRUD website has three types of products (<strong>Food, Clothes</strong> and <strong>Devices</strong>)
+    and two types of compositions (<strong>Ingredients</strong> for food and <strong>Materials</strong> for
+    clothes). So, to add clothes, first must add material(s). The same situation
+    is with food, one must add an ingredient(s). The device does not have any
+    compositions, so it is possible to add it straight away.
+    
   </div>
 </div>

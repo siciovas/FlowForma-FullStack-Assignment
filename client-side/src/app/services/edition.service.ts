@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/portal';
-import { AddClothesComponent } from '../forms/add-clothes/add-clothes.component';
-import { AddDeviceComponent } from '../forms/add-device/add-device.component';
-import { AddFoodComponent } from '../forms/add-food/add-food.component';
-import { AddIngredientComponent } from '../forms/add-ingredient/add-ingredient.component';
-import { AddMaterialComponent } from '../forms/add-material/add-material.component';
+import { FormClothesComponent } from '../components/forms/form-clothes/form-clothes.component';
+import { FormDeviceComponent } from '../components/forms/form-device/form-device.component';
+import { FormFoodComponent } from '../components/forms/form-food/form-food.component';
+import { FormIngredientComponent } from '../components/forms/form-ingredient/form-ingredient.component';
+import { FormMaterialComponent } from '../components/forms/form-material/form-material.component';
 import { environment } from '../environments/environment';
 import { HttpService } from './http.service';
 
@@ -22,10 +22,11 @@ export class EditionService {
     this.editDialogComponent = component;
   }
 
-  openEditDialog(id: number | null): void {
+  openEditDialog(id: number | null, triggerEvent: () => void): void {
     if (this.editDialogComponent && id) {
       this.httpService.getById(this.url, id).subscribe((response: any) => {
         var additionalData;
+        var dialogRef;
         if (this.url == environment.CLOTHES || this.url == environment.FOODS) {
           this.httpService
             .getAll(
@@ -35,20 +36,33 @@ export class EditionService {
             )
             .subscribe((data) => {
               additionalData = data;
-              this.dialog.open(this.editDialogComponent as ComponentType<any>, {
-                data: {
-                  body: response,
-                  httpService: this.httpService,
-                  additionalData,
-                },
+              console.log(additionalData);
+              dialogRef = this.dialog.open(
+                this.editDialogComponent as ComponentType<any>,
+                {
+                  data: {
+                    body: response,
+                    httpService: this.httpService,
+                    additionalData,
+                  },
+                }
+              );
+              dialogRef.componentInstance.triggerEvent.subscribe(() => {
+                triggerEvent();
               });
             });
         } else {
-          this.dialog.open(this.editDialogComponent as ComponentType<any>, {
-            data: {
-              body: response,
-              httpService: this.httpService,
-            },
+          dialogRef = this.dialog.open(
+            this.editDialogComponent as ComponentType<any>,
+            {
+              data: {
+                body: response,
+                httpService: this.httpService,
+              },
+            }
+          );
+          dialogRef.componentInstance.triggerEvent.subscribe(() => {
+            triggerEvent();
           });
         }
       });
@@ -59,15 +73,15 @@ export class EditionService {
     this.url = url;
 
     if (url == environment.CLOTHES) {
-      this.setEditDialogComponent(AddClothesComponent);
+      this.setEditDialogComponent(FormClothesComponent);
     } else if (url == environment.DEVICES) {
-      this.setEditDialogComponent(AddDeviceComponent);
+      this.setEditDialogComponent(FormDeviceComponent);
     } else if (url == environment.FOODS) {
-      this.setEditDialogComponent(AddFoodComponent);
+      this.setEditDialogComponent(FormFoodComponent);
     } else if (url == environment.INGREDIENTS) {
-      this.setEditDialogComponent(AddIngredientComponent);
+      this.setEditDialogComponent(FormIngredientComponent);
     } else if (url == environment.MATERIALS) {
-      this.setEditDialogComponent(AddMaterialComponent);
+      this.setEditDialogComponent(FormMaterialComponent);
     }
   }
 }

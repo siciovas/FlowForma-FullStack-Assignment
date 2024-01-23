@@ -8,7 +8,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: true,
   imports: [MatButtonModule, MatDialogModule],
   templateUrl: './delete-dialog.component.html',
-  styleUrl: './delete-dialog.component.css',
 })
 export class DeleteDialogComponent {
   @Output() triggerEvent = new EventEmitter<void>();

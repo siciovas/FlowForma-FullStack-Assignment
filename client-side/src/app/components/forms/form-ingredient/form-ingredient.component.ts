@@ -5,12 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-add-ingredient',
+  selector: 'app-form-ingredient',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -20,10 +20,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CommonModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './add-ingredient.component.html',
-  styleUrl: './add-ingredient.component.css',
+  templateUrl: './form-ingredient.component.html',
+  styleUrl: './form-ingredient.component.css',
 })
-export class AddIngredientComponent {
+export class FormIngredientComponent {
   @Output() triggerEvent = new EventEmitter<void>();
   ingredientForm: FormGroup;
   isEdit: boolean = false;

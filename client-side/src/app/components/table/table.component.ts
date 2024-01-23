@@ -4,8 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { EditButtonComponent } from '../edit-button/edit-button.component';
-import { DeleteButtonComponent } from '../delete-button/delete-button.component';
+import { EditButtonComponent } from '../buttons/edit-button/edit-button.component';
+import { DeleteButtonComponent } from '../buttons/delete-button/delete-button.component';
 
 export interface TableColumns {
   name: string;

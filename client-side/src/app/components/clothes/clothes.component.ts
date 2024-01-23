@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
-import { AddButtonComponent } from '../add-button/add-button.component';
+import { AddButtonComponent } from '../buttons/add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddClothesComponent } from '../../forms/add-clothes/add-clothes.component';
+import { FormClothesComponent } from '../forms/form-clothes/form-clothes.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
 import { MaterialElement } from '../materials/materials.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 export interface ClothesElement {
   id: number;
@@ -22,7 +24,12 @@ const ELEMENT_DATA: ClothesElement[] = [];
 @Component({
   selector: 'app-clothes',
   standalone: true,
-  imports: [TableComponent, AddButtonComponent],
+  imports: [
+    TableComponent,
+    AddButtonComponent,
+    MatProgressSpinnerModule,
+    CommonModule,
+  ],
   templateUrl: './clothes.component.html',
   styleUrl: './clothes.component.css',
 })
@@ -37,6 +44,7 @@ export class ClothesComponent implements OnInit {
     { name: '', displayName: 'Actions' },
   ];
 
+  isLoading: boolean = true;
   dataSource: ClothesElement[] = ELEMENT_DATA;
   buttonLabel = 'Add clothes';
   apiName = environment.CLOTHES;
@@ -51,7 +59,7 @@ export class ClothesComponent implements OnInit {
     this.httpService
       .getAll(environment.MATERIALS)
       .subscribe((materials: MaterialElement[]) => {
-        const dialogRef = this.dialog.open(AddClothesComponent, {
+        const dialogRef = this.dialog.open(FormClothesComponent, {
           data: {
             materials,
             httpService: this.httpService,
@@ -66,6 +74,7 @@ export class ClothesComponent implements OnInit {
   loadClothes() {
     this.httpService.getAll(environment.CLOTHES).subscribe((clothes) => {
       this.dataSource = clothes;
+      this.isLoading = false;
     });
   }
 
@@ -75,6 +84,7 @@ export class ClothesComponent implements OnInit {
   }
 
   triggerEvent = () => {
+    this.isLoading = true;
     this.loadClothes();
   };
 }

@@ -1,4 +1,4 @@
-.container {
+.items {
   display: flex;
   justify-content: center;
 }
@@ -9,4 +9,11 @@ a {
 
 h3 {
   font-weight: bold;
+}
+
+.explanation {
+  max-width: 50%;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
 }

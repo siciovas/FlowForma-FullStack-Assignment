@@ -7,10 +7,10 @@ import { HomeComponent } from './components/home/home.component';
 import { MaterialsComponent } from './components/materials/materials.component';
 
 export const routes: Routes = [
-  {path: 'clothes', component: ClothesComponent},
-  {path: 'devices', component: DevicesComponent},
-  {path: 'foods', component: FoodsComponent},
-  {path: 'ingredients', component: IngredientsComponent},
-  {path: 'materials', component: MaterialsComponent},
-  {path: '', component: HomeComponent}
+  { path: 'clothes', component: ClothesComponent },
+  { path: 'devices', component: DevicesComponent },
+  { path: 'foods', component: FoodsComponent },
+  { path: 'ingredients', component: IngredientsComponent },
+  { path: 'materials', component: MaterialsComponent },
+  { path: '', component: HomeComponent },
 ];

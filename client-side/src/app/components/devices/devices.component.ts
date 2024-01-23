@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../table/table.component';
-import { AddButtonComponent } from '../add-button/add-button.component';
+import { AddButtonComponent } from '../buttons/add-button/add-button.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AddDeviceComponent } from '../../forms/add-device/add-device.component';
+import { FormDeviceComponent } from '../forms/form-device/form-device.component';
 import { EditionService } from '../../services/edition.service';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../../services/http.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 export interface DeviceElement {
   id: number;
@@ -20,7 +22,12 @@ const ELEMENT_DATA: DeviceElement[] = [];
 @Component({
   selector: 'app-devices',
   standalone: true,
-  imports: [TableComponent, AddButtonComponent],
+  imports: [
+    TableComponent,
+    AddButtonComponent,
+    MatProgressSpinnerModule,
+    CommonModule,
+  ],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.css',
 })
@@ -34,6 +41,7 @@ export class DevicesComponent implements OnInit {
     { name: '', displayName: 'Actions' },
   ];
 
+  isLoading: boolean = true;
   dataSource: DeviceElement[] = ELEMENT_DATA;
   buttonLabel = 'Add device';
   apiName = environment.DEVICES;
@@ -45,16 +53,20 @@ export class DevicesComponent implements OnInit {
   ) {}
 
   openAdditionDialog() {
-    this.dialog.open(AddDeviceComponent, {
+    const dialogRef = this.dialog.open(FormDeviceComponent, {
       data: {
         httpService: this.httpService,
       },
+    });
+    dialogRef.componentInstance.triggerEvent.subscribe(() => {
+      this.triggerEvent();
     });
   }
 
   loadDevices() {
     this.httpService.getAll(environment.DEVICES).subscribe((device) => {
       this.dataSource = device;
+      this.isLoading = false;
     });
   }
 
@@ -64,6 +76,7 @@ export class DevicesComponent implements OnInit {
   }
 
   triggerEvent = () => {
+    this.isLoading = true;
     this.loadDevices();
   };
 }

@@ -16,7 +16,10 @@
           <th *matHeaderCellDef>Actions</th>
           <td>
             <div class="buttons">
-              <app-edit-button [id]="element['id']"></app-edit-button>
+              <app-edit-button
+                [triggerEvent]="triggerEvent"
+                [id]="element['id']"
+              ></app-edit-button>
               <app-delete-button
                 [url]="url"
                 [id]="element['id']"
