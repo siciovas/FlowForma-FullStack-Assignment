@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { DeleteDialogComponent } from '../../delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../forms/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpService } from '../../../services/http.service';
 
