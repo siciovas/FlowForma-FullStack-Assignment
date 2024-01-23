@@ -36,7 +36,6 @@ export class EditionService {
             )
             .subscribe((data) => {
               additionalData = data;
-              console.log(additionalData);
               dialogRef = this.dialog.open(
                 this.editDialogComponent as ComponentType<any>,
                 {
